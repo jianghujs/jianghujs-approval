@@ -25,10 +25,10 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --port=7001 --title=jianghujs-reviewflow",
+    "start": "egg-scripts start --daemon --port=7077 --title=jianghujs-reviewflow",
     "stop": "egg-scripts stop --title=jianghujs-reviewflow",
-    "dev": "egg-bin dev --port=7001",
-    "debug": "egg-bin debug --port=7001",
+    "dev": "egg-bin dev --port=7077",
+    "debug": "egg-bin debug --port=7077",
     "autod": "autod"
   },
   "repository": {

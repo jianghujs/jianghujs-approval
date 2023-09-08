@@ -1,0 +1,41 @@
+<!-- vueFilters.html start -->
+<script>
+  const filterObj = {
+    // 日期格式化
+    dateFormat(value, format = 'YYYY-MM-DD HH:mm:ss') {
+      if (!value) return ''
+      return dayjs(value).format(format);
+    },
+    getUsername(userId, allUserList) {
+      if (!userId) return ''
+      const userIdList = userId.split(',');
+      const userList = allUserList.filter(item => userIdList.includes(item.employeeId));
+      return userList.map(item => item.employeeName).join(',');
+    },
+    statusColor(status) {
+      switch (status) {
+        case '已驳回':
+        case '驳回':
+        case '拒绝':
+          return 'error';
+        case '通过':
+        case '已分配':
+        case '完成':
+          return 'success';
+        case '审核中':
+        case '待分配':
+        case '申请':
+        case '处理中':
+          return 'warning';
+        default:
+          return '';
+      }
+    },
+  }
+  for (let value in filterObj) {
+    // value是filter名称（字符串）
+    // filters[value] 对象里面的某个元素，就是filters中定义的方法
+    Vue.filter(value, filterObj[value])
+  }
+</script>
+<!-- vueFilters.html end -->
