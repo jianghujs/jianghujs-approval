@@ -406,14 +406,6 @@ new Vue({
           await this.closeUpdateDrawer();
           await this.getTableData();
           break;
-        case 'deleteItem':
-          await this.prepareDeleteFormData(uiActionData);
-          await this.confirmDeleteItemDialog();
-          await this.prepareDoDeleteItem();
-          await this.doDeleteItem();
-          await this.clearDeleteItem();
-          await this.getTableData();
-          break;
         default:
           console.error("[doUiAction] uiActionId not find", {uiActionId});
           break;
@@ -588,38 +580,6 @@ new Vue({
       this.updateItemId = null;
     },
     // ---------- <<<<<<<<<<< 修改数据 uiAction ---------
-    // ---------- 删除数据 uiAction >>>>>>>>>>>> --------
-    async prepareDeleteFormData(funObj) {
-      this.deleteItem = _.cloneDeep(funObj);
-    },
-    async confirmDeleteItemDialog() {
-      if (await window.confirmDialog({title: "删除", content: "确定删除吗？"}) === false) {
-        throw new Error("[confirmDeleteItemDialog] 否");
-      }
-    },
-    async prepareDoDeleteItem() {
-      const {id} = this.deleteItem;
-      this.deleteItemId = id;
-    },
-    async doDeleteItem() {
-      await window.vtoast.loading("删除数据");
-      await window.jianghuAxios({
-        data: {
-          appData: {
-            pageId: 'leaveManagement',
-            actionId: 'deleteItem',
-            actionData: {},
-            where: {id: this.deleteItemId}
-          }
-        }
-      });
-      await window.vtoast.success("删除数据成功");
-    },
-    async clearDeleteItem() {
-      this.deleteItem = {};
-      this.deleteItemId = null;
-    }
-    // ---------- <<<<<<<<<<< 删除数据 uiAction ---------
   }
 })
 </script>
