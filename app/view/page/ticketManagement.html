@@ -371,7 +371,7 @@ new Vue({
     constantObj: {
       gender: [{"value": null, "text": "全部"}, {"value": "male", "text": "男"}, {"value": "female", "text": "女"}],
       ticketStatus: [
-        {text: '未审核', value: ['申请']},
+        {text: '未审核', value: ['申请', '处理中']},
         {text: '已审核', value: ['完成', '处理中']},
         {text: '已拒绝', value: ['拒绝']},
       ],
@@ -420,11 +420,24 @@ new Vue({
     deleteItemId: null,
 
     serverSearchInput: {
-      ticketStatus: ['申请'],
+      ticketStatus: ['申请', '处理中'],
     },
     userId: window.userInfo.userId,
 
   }),
+  computed: {
+    tableDataFilter() {
+      if (this.serverSearchInput.ticketStatus.includes('申请')) {
+        return this.tableData.filter(item => ['申请', '处理中'].includes(item.ticketStatus) && item.ticketAuditUserIdList.includes(this.userId));
+      } else if (this.serverSearchInput.ticketStatus.includes('完成')) {
+        return this.tableData.filter(item => ['完成', '处理中'].includes(item.ticketStatus) && item.ticketAuditedUserIdList.includes(this.userId));
+      } else if (this.serverSearchInput.ticketStatus.includes('拒绝')) {
+        return this.tableData.filter(item => ['拒绝'].includes(item.ticketStatus));
+      } else {
+        return this.tableData;
+      }
+    }
+  },
   watch: {
     isHelpPageDrawerShown(val) {
       if (val && !this.isHelpPageDrawerLoaded) {
@@ -468,7 +481,7 @@ new Vue({
           break;
         case 'doHandleTicket':
           await this.prepareUpdateValidate();
-          await this.confirmUpdateItemDialog();
+          await this.confirmUpdateItemDialog(uiActionData);
           await this.prepareDoHandleItem();
           await this.doHandleItem(uiActionData);
           await this.closeUpdateDrawer();
@@ -489,6 +502,12 @@ new Vue({
           return true;
         }
       });
+      const whereLike = {};
+      if (this.serverSearchInput.ticketStatus.includes('申请')) {
+        whereLike.ticketAuditUserIdList = `%${this.userId}%`;
+      } else if (this.serverSearchInput.ticketStatus.includes('完成')) {
+        whereLike.ticketAuditedUserIdList = `%${this.userId}%`;
+      }
       const rows = (await window.jianghuAxios({
         data: {
           appData: {
@@ -496,10 +515,11 @@ new Vue({
             actionId: 'selectItemList',
             actionData: {},
             whereIn: backendSearchData,
-            whereOrOptions: [
-              ['ticketAuditUserIdList', 'like', `%${this.userId}%`],
-              ['ticketAuditedUserIdList', 'like', `%${this.userId}%`],
-            ],
+            whereLike,
+            // whereOrOptions: [
+            //   ['ticketAuditUserIdList', 'like', `%${this.userId}%`],
+            //   ['ticketAuditedUserIdList', 'like', `%${this.userId}%`],
+            // ],
             orderBy: [{column: 'operationAt', order: 'desc'}]
           }
         }
@@ -649,8 +669,8 @@ new Vue({
       throw new Error("请完善表单信息")
     },
 
-    async confirmUpdateItemDialog() {
-      if (await window.confirmDialog({title: "修改", content: "确定修改吗？"}) === false) {
+    async confirmUpdateItemDialog(ticketStatus) {
+      if (await window.confirmDialog({title: ticketStatus, content: "确定提交操作吗？"}) === false) {
         throw new Error("[confirmUpdateItemDialog] 否");
       }
     },
