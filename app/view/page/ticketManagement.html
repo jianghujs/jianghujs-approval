@@ -340,9 +340,13 @@ new Vue({
   vuetify: new Vuetify(),
   filters: {
     parseConstantText(value, list) {
-      console.log(value)
-      let constantItem = list.filter(constant => value.includes(constant.value));
-      return constantItem.length > 0 ? constantItem.map(item => item.text).join(',') : value;
+      // 如果不是arr 转换
+      let valueItem = value;
+      if (!Array.isArray(value)) {
+        valueItem = value.split(',')
+      }
+      let constantItem = list.filter(constant => valueItem.includes(constant.value));
+      return constantItem.length > 0 ? constantItem.map(item => item.text).join(',') : valueItem.join(',');
     }
   },
   data: () => ({
