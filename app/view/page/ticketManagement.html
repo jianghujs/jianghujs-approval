@@ -258,7 +258,8 @@ SQL END!-->
             <span class="text-subtitle-1 font-weight-medium pa-6 pl-7">
               <span v-if="updateItem.isHasAuditPermission">审核</span>
               <span v-else>查看</span>申请
-              <v-chip color="warning" small>{{updateItem.ticketId}}</v-chip>
+              <v-chip small>{{updateItem.ticketId}}</v-chip>
+              <v-chip :color="updateItem.ticketStatus | statusColor" small>{{updateItem.ticketStatus}}</v-chip>
             </span>
           </v-row>
           <!-- 抽屉表单 -->
