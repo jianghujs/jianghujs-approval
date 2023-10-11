@@ -21,24 +21,21 @@ SQL END!-->
   <v-main class="mt-15">
     <!-- 头部内容 >>>>>>>>>>>>> -->
     <div class="jh-page-second-bar px-8">
-      <v-row>
+      <v-row class="align-center">
         <v-col cols="12" xs="12" sm="12" md="4" xl="3">
-          <div class="pt-3 text-h7 font-weight-bold">ticketManagement
+          <div class="py-4 text-body-1 font-weight-bold">流程审核
             <!-- 帮助页按钮 -->
-            <v-icon @click="isHelpPageDrawerShown = true" color="success" small>mdi-help-circle-outline
-            </v-icon>
+            <span role="button" class="success--text font-weight-regular jh-font-size-13 ml-2" @click="isHelpPageDrawerShown = true">
+              <v-icon size="13" class="success--text">mdi-help-circle-outline</v-icon>帮助
+            </span>
           </div>
-          <v-breadcrumbs class="pb-3 pt-0 pl-0" :items="breadcrumbs" divider="-"></v-breadcrumbs>
         </v-col>
-        <!--pc端的搜索条件表单 >>>>>>>> -->
+        <!-- pc端的搜索条件表单 >>>>>>>> -->
         <v-col cols="12" xs="12" sm="12" md="8" xl="9">
-          <v-row class="jh-backend-form-container justify-end ma-0 py-1 pb-xs-2">
-            <v-col cols="12" xs="6" sm="6" md="4" xl="3" class="pa-xs-0 pb-2 pr-2 pr-xs-1">
-              <v-select v-model="serverSearchInput.ticketStatus" color="success" class="jh-v-input bg-white" :items="constantObj.ticketStatus" dense filled single-line></v-select>
-            </v-col>
-            <!-- <v-btn class="jh-backend-search-btn elevation-0 ml-0 mt-3" color="success" small @click="doUiAction('refreshTableData')">
-              查询
-            </v-btn> -->
+          <v-row class="jh-backend-form-container justify-end ma-0 py-3">
+            <v-btn-toggle v-model="serverSearchInput.ticketStatus" mandatory dense color="success">  
+              <v-btn small :value="item.value" :key="index" v-for="item, index in constantObj.ticketStatus">{{item.text}}</v-btn> 
+            </v-btn-toggle>
           </v-row>
         </v-col>
         <!-- <<<<<<<< pc端的搜索条件表单 -->
@@ -81,13 +78,10 @@ SQL END!-->
             </span>
           </template>
           <template v-slot:item.ticketType="{ item }">
-            <v-avatar color="warning" size="20">
-              <span class="white--text">{{item.ticketType[0]}}</span>
-            </v-avatar>
             {{item.ticketType}}
           </template>
           <template v-slot:item.ticketStatus="{ item }">
-            <v-chip small :color="item.ticketStatus | statusColor">{{item.ticketStatus}}</v-chip>
+            <v-chip x-small :color="item.ticketStatus | statusColor">{{item.ticketStatus}}</v-chip>
           </template>
           <template v-slot:item.ticketStatusAt="{ item }">
             {{item.ticketStatusAt | dateFormat}}
@@ -121,13 +115,16 @@ SQL END!-->
           </template>
         </v-data-table>
       </v-card>
+      <!-- <<<<<<<<<<<<< 页面内容 -->
+      
       <!-- 新增抽屉 -->
       <v-navigation-drawer v-if="isCreateDrawerShown" v-model="isCreateDrawerShown" :permanent="isCreateDrawerShown" fixed temporary right width="80%" class="elevation-24">
         <v-form ref="createForm" lazy-validation>
           <!-- 抽屉标题 -->
-          <v-row>
-            <span class="text-subtitle-1 font-weight-medium pa-6 pl-7">新增信息</span>
+          <v-row no-gutters>
+            <span class="text-h7 font-weight-bold pa-4">新增信息</span>
           </v-row>
+          <v-divider class="jh-divider"></v-divider>
           <!-- 抽屉表单 -->
           <!-- <v-text-field class="jh-v-input" dense single-line filled v-model="createItem.xxxId" :rules="validationRules.requireRules"></v-text-field> -->
           <v-row class="mt-0 px-4">
@@ -240,7 +237,7 @@ SQL END!-->
           </v-row>
 
           <!-- 抽屉操作按钮 -->
-          <v-row class="justify-end mx-0 mt-8 px-6">
+          <v-row class="justify-end mx-0 my-8 px-4">
             <v-btn color="success" @click="doUiAction('createItem')" small>保存</v-btn>
             <v-btn class="elevation-0 ml-2" @click="isCreateDrawerShown = false" small>取消</v-btn>
           </v-row>
@@ -250,22 +247,24 @@ SQL END!-->
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-navigation-drawer>
+
       <!-- 编辑抽屉 -->
       <v-navigation-drawer v-if="isUpdateDrawerShown" v-model="isUpdateDrawerShown" :permanent="isUpdateDrawerShown" fixed temporary right width="80%" class="elevation-24">
         <v-form ref="updateForm" lazy-validation>
           <!-- 抽屉标题 -->
-          <v-row>
-            <span class="text-subtitle-1 font-weight-medium pa-6 pl-7">
-              <span v-if="updateItem.isHasAuditPermission">审核</span>
-              <span v-else>查看</span>申请
-              <v-chip small>{{updateItem.ticketId}}</v-chip>
-              <v-chip :color="updateItem.ticketStatus | statusColor" small>{{updateItem.ticketStatus}}</v-chip>
-            </span>
+          <v-row no-gutters class="align-center justify-end">
+            <span class="text-h7 font-weight-bold pa-4">{{updateItem.isHasAuditPermissio ? '审核申请' : '查看申请'}}</span>
+            <v-spacer></v-spacer>
+            <!-- 抽屉操作按钮 -->
+            <div class="d-flex justify-end pr-4">
+              <v-chip class="ml-2" x-small>{{updateItem.ticketId}}</v-chip>
+              <v-chip v-if="updateItem.ticketStatus" :color="updateItem.ticketStatus | statusColor" class="ml-2" x-small>{{updateItem.ticketStatus}}</v-chip>
+            </div>
           </v-row>
+          <v-divider class="jh-divider"></v-divider>
+
           <!-- 抽屉表单 -->
           <v-row class="mt-0 px-4">
-            <!-- <v-text-field class="jh-v-input" dense single-line filled v-model="updateItem.xxxId" :rules="validationRules.requireRules"></v-text-field> -->
-             
             <v-col cols="12" sm="12" v-if="updateItem.ticketType == '默认类型'">
               <span class="jh-input-label">请假申请</span>
               <v-card outlined class="py-2 px-4">
@@ -292,7 +291,7 @@ SQL END!-->
                        
           </v-row>
           <!-- 抽屉操作按钮 -->
-          <v-row class="justify-end mx-0 mt-8 px-6" v-if="updateItem.isHasAuditPermission">
+          <v-row class="justify-end mx-0 my-8 px-4" v-if="updateItem.isHasAuditPermission">
             <v-btn color="success" @click="doUiAction('doHandleTicket', '完成')" small>同意</v-btn>
             <v-btn color="error" @click="doUiAction('doHandleTicket', '拒绝')" class="elevation-0 ml-2" small>拒绝</v-btn>
             <v-btn class="elevation-0 ml-2" @click="isUpdateDrawerShown = false" small>取消</v-btn>
@@ -303,7 +302,6 @@ SQL END!-->
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-navigation-drawer>
-      <!-- <<<<<<<<<<<<< 页面内容 -->
     </div>
 
     <!-- 帮助页抽屉 >>>>>>>>>>>>> -->
@@ -350,17 +348,6 @@ new Vue({
     }
   },
   data: () => ({
-    // 面包屑
-    breadcrumbs: [
-      {
-        text: '首页',
-        disabled: true,
-      },
-      {
-        text: 'ticketManagement',
-        disabled: true,
-      }
-    ],
     isHelpPageDrawerShown: false,
     isHelpPageDrawerLoaded: false,
     isMobile: window.innerWidth < 500,
@@ -388,7 +375,6 @@ new Vue({
     isTableLoading: true,
     tableData: [],
     headers: [
-      {text: '操作', value: 'action', align: 'center', sortable: false, width: 120, class: 'fixed', cellClass: 'fixed'},
       {text: "ID", value: "id", width: 120},
        
       {text: "业务ID", value: "ticketBizId", width: 100}, 
@@ -411,6 +397,7 @@ new Vue({
       // {text: "审核配置", value: "ticketAuditConfig", width: 120}, 
       // {text: "操作者", value: "operationByUser", width: 120},
       // {text: "操作时间", value: "operationAt", width: 250},
+      {text: '操作', value: 'action', align: 'center', sortable: false, width: 80, class: 'fixed', cellClass: 'fixed'},
     ],
 
     isCreateDrawerShown: false,
