@@ -10,7 +10,7 @@
    port: 3306,
    user: 'root',
    password: '123456',
-   database: 'jianghujs_reviewflow'
+   database: 'jianghujs_approval'
    ```
 4. 启动 npm run dev
    
@@ -18,8 +18,8 @@
 
 ```sql
 # 数据库初始化
-create database `jianghujs_reviewflow` default character set utf8mb4 collate utf8mb4_bin;
-use jianghujs_reviewflow;
+create database `jianghujs_approval` default character set utf8mb4 collate utf8mb4_bin;
+use jianghujs_approval;
 # 运行 sql/init.sql 文件
 ```
 

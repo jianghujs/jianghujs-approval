@@ -11,13 +11,13 @@ const eggJianghuPath = path.join(eggJianghuPathTemp, '../');
 module.exports = appInfo => {
   assert(appInfo);
 
-  const appId = 'jianghujs-reviewflow';
+  const appId = 'jianghujs-approval';
   const uploadDir = path.join(appInfo.baseDir, 'upload');
   const downloadBasePath = `/${appId}/upload`;
 
   return {
     appId,
-    appTitle: 'reviewflow',
+    appTitle: 'approval',
     appLogo: `${appId}/public/img/logo.png`,
     appType: 'single',
     appDirectoryLink: '/',

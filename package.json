@@ -1,5 +1,5 @@
 {
-  "name": "jianghujs-reviewflow",
+  "name": "jianghujs-approval",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -25,15 +25,15 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --port=7077 --title=jianghujs-reviewflow",
-    "stop": "egg-scripts stop --title=jianghujs-reviewflow",
+    "start": "egg-scripts start --daemon --port=7077 --title=jianghujs-approval",
+    "stop": "egg-scripts stop --title=jianghujs-approval",
     "dev": "egg-bin dev --port=7077",
     "debug": "egg-bin debug --port=7077",
     "autod": "autod"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jianghujs/jianghujs-reviewflow.git"
+    "url": "https://github.com/jianghujs/jianghujs-approval.git"
   },
   "author": "",
   "license": "Apache-2.0"
